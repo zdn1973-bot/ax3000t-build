@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-KIT_DIR="$(cd "$(dirname "\${BASH_SOURCE[0]}")" && pwd)"
-OPENWRT_DIR="\${1:-}"
+KIT_DIR="$(cd "$(dirname "$0")" && pwd)"
+OPENWRT_DIR="$1"
 if [[ -z "$OPENWRT_DIR" || ! -d "$OPENWRT_DIR/target/linux/sunxi" ]]; then
   echo "Usage: $0 /path/to/openwrt-v24.10.5" >&2
   exit 2
