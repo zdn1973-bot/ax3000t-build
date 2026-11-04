@@ -15,7 +15,7 @@ diff --git a/arch/arm/boot/dts/allwinner/sun8i-h3-dolphin-p1.dts b/arch/arm/boot
 new file mode 100644
 --- /dev/null
 +++ b/arch/arm/boot/dts/allwinner/sun8i-h3-dolphin-p1.dts
-@@ -0,0 +1,58 @@
+@@ -0,0 +1,59 @@
 +// SPDX-License-Identifier: GPL-2.0 OR X11
 +/*
 + * Minimal bring-up DTS for the MBOX Dolphin-P1 (Allwinner H3).
