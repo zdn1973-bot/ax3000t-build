@@ -87,14 +87,15 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$GITHUB_WORKSPACE/out"
-          mapfile -t images < <(find bin/targets/sunxi/cortexa7 -maxdepth 1 -type f -iname '*dolphin-p1*sdcard.img.gz' | sort)
-          if [ "\${#images[@]}" -ne 1 ]; then
-            echo "Expected exactly one Dolphin-P1 SD image; found \${#images[@]}."
+          IMAGE="$(find bin/targets/sunxi/cortexa7 -maxdepth 1 -type f -iname '*dolphin-p1*sdcard.img.gz' | sort | head -n1)"
+          COUNT="$(find bin/targets/sunxi/cortexa7 -maxdepth 1 -type f -iname '*dolphin-p1*sdcard.img.gz' | wc -l)"
+          if [ "$COUNT" -ne 1 ] || [ -z "$IMAGE" ]; then
+            echo "Expected exactly one Dolphin-P1 SD image; found $COUNT."
             find bin/targets/sunxi/cortexa7 -maxdepth 1 -type f -print | sort
             exit 1
           fi
-          gzip -t "\${images[0]}"
-          cp "\${images[0]}" "$GITHUB_WORKSPACE/out/"
+          gzip -t "$IMAGE"
+          cp "$IMAGE" "$GITHUB_WORKSPACE/out/"
           cd "$GITHUB_WORKSPACE/out"
           sha256sum ./*.img.gz | tee SHA256SUMS.txt
           ls -lh
