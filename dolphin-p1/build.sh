@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-KIT_DIR="$(cd "$(dirname "\${BASH_SOURCE[0]}")" && pwd)"
-WORKDIR="\${1:-$KIT_DIR/openwrt-v24.10.5}"
-JOBS="\${JOBS:-2}"
+KIT_DIR="$(cd "$(dirname "$0")" && pwd)"
+if [ "$#" -gt 0 ]; then
+  WORKDIR="$1"
+else
+  WORKDIR="$KIT_DIR/openwrt-v24.10.5"
+fi
+JOBS="$(printenv JOBS || echo 2)"
 
 if [[ ! -d "$WORKDIR/.git" ]]; then
   git clone --branch v24.10.5 --depth 1 https://github.com/openwrt/openwrt.git "$WORKDIR"
