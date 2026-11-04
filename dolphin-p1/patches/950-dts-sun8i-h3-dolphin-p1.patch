@@ -1,0 +1,76 @@
+diff --git a/arch/arm/boot/dts/allwinner/Makefile b/arch/arm/boot/dts/allwinner/Makefile
+--- a/arch/arm/boot/dts/allwinner/Makefile
++++ b/arch/arm/boot/dts/allwinner/Makefile
+@@ -236,7 +236,8 @@
+ 	sun8i-h3-orangepi-2.dtb \
+ 	sun8i-h3-orangepi-lite.dtb \
+ 	sun8i-h3-orangepi-one.dtb \
+ 	sun8i-h3-orangepi-pc.dtb \
++	sun8i-h3-dolphin-p1.dtb \
+ 	sun8i-h3-orangepi-pc-plus.dtb \
+ 	sun8i-h3-orangepi-plus.dtb \
+ 	sun8i-h3-orangepi-plus2e.dtb \
+
+diff --git a/arch/arm/boot/dts/allwinner/sun8i-h3-dolphin-p1.dts b/arch/arm/boot/dts/allwinner/sun8i-h3-dolphin-p1.dts
+new file mode 100644
+--- /dev/null
++++ b/arch/arm/boot/dts/allwinner/sun8i-h3-dolphin-p1.dts
+@@ -0,0 +1,58 @@
++// SPDX-License-Identifier: GPL-2.0 OR X11
++/*
++ * Minimal bring-up DTS for the MBOX Dolphin-P1 (Allwinner H3).
++ *
++ * Board facts used here are taken from the original Dolphin-P1 vendor
++ * sys_config.fex: machine="dolphin-p1", gmac_used=2 (internal PHY),
++ * mmc0 on PF pins with PF6 card detect, and UART0 on PA04/PA05.
++ *
++ * Wi-Fi/SDIO, HDMI, audio, LEDs and unverified GPIOs are intentionally
++ * omitted. The first target is SD boot plus wired Ethernet only.
++ */
++
++/dts-v1/;
++#include "sun8i-h3.dtsi"
++#include "sunxi-common-regulators.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	model = "MBOX Dolphin-P1 (Allwinner H3)";
++	compatible = "m0rf30,dolphin-p1", "allwinner,sun8i-h3";
++
++	aliases {
++		ethernet0 = &emac;
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++/* The vendor board configuration selects the H3 internal Ethernet PHY. */
++&emac {
++	phy-handle = <&int_mii_phy>;
++	phy-mode = "mii";
++	status = "okay";
++};
++
++/* Avoid probing the unused external MDIO route on this board. */
++&external_mdio {
++	status = "disabled";
++};
++
++/* Dolphin-P1 SD socket: mmc0 on PF0..PF5, card detect on PF6. */
++&mmc0 {
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;
++	status = "okay";
++};
++
++/* Mainline console UART used by the H3 Dolphin-P1 bring-up log. */
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pa_pins>;
++	status = "okay";
++};
