@@ -6,7 +6,6 @@ on:
       - dolphin-p1-openwrt-24.10.5
     paths:
       - 'dolphin-p1/**'
-      - '.github/workflows/dolphin-p1-build.yml'
   workflow_dispatch:
 
 permissions:
